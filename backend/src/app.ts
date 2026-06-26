@@ -43,8 +43,9 @@ app.use(errorHandler)
 
 const bootstrap = async () => {
     try {
+        const PORT = Number(process.env.PORT) || 3000
         await mongoose.connect(DB_ADDRESS)
-        await app.listen(PORT, () => console.log('ok'))
+        await await app.listen(PORT, '0.0.0.0', () => console.log('ok'))
     } catch (error) {
         console.error(error)
     }

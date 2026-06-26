@@ -12,3 +12,10 @@ docker compose up -d
 5. На странице http://localhost/login/ можно авторизоваться.
 6. Админка находится по адресу http://localhost/admin/
 
+# repository link
+https://github.com/malannly/bad-server
+
+# information about the creator
+Анна
+41 когорта
+курс full-stack developer

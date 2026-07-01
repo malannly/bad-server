@@ -7,6 +7,7 @@ import {
 } from '@types'
 import { setCookie } from '../../../utils/cookie'
 import { createAsyncThunk } from '../../hooks'
+import { WebLarekAPI } from '@api'
 
 export const checkUserAuth = createAsyncThunk<UserResponse, void>(
     `user/checkUserAuth`,
@@ -31,11 +32,14 @@ export const registerUser = createAsyncThunk<
     return data
 })
 
-export const loginUser = createAsyncThunk<UserResponseToken, UserLoginBodyDto>(
-    `user/loginUser`,
+export const loginUser = createAsyncThunk<
+UserResponseToken,
+UserLoginBodyDto,
+{ extra: WebLarekAPI }
+> (
+    'user/loginUser',
     async (dataUser, { extra: api }) => {
         const data = await api.loginUser(dataUser)
-        setCookie('accessToken', data.accessToken)
         return data
     }
 )

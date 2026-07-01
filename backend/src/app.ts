@@ -13,11 +13,6 @@ import routes from './routes'
 const { PORT = 3000 } = process.env
 const app = express()
 
-app.use((req, _res, next) => {
-    console.log('INCOMING:', req.method, req.url)
-    next()
-})
-
 app.use(cookieParser())
 
 app.use(serveStatic(path.join(__dirname, 'public')))

@@ -12,7 +12,7 @@ import User from '../models/user'
 
 // получение токена
 const getCsrfToken = (req: Request, res: Response) => {
-    console.log('ddddddddddddddddddd', typeof (req as any).csrfToken)
+    console.log('csrfToken method', typeof (req as any).csrfToken)
 
     res.json({
         csrfToken: req.csrfToken(),

@@ -227,12 +227,21 @@ export class WebLarekAPI extends Api implements IWebLarekAPI {
     }
 
     loginUser = (data: UserLoginBodyDto) => {
-        return this.request<UserResponseToken>('/auth/login', {
-            method: 'POST',
-            body: JSON.stringify(data),
-            headers: {
-                'Content-Type': 'application/json',
-            },
+    const csrfToken = getCookie('_csrf')
+    return this.request('/auth/login', {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: {
+            'Content-Type': 'application/json',
+            ...(csrfToken ? { 'x-csrf-token': csrfToken } : {}),
+        },
+        credentials: 'include',
+    })
+    }
+
+    getCsrfToken = () => {
+        return this.request<{ csrfToken: string }>('/auth/csrf-token', {
+            method: 'GET',
             credentials: 'include',
         })
     }

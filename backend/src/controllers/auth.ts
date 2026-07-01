@@ -16,7 +16,7 @@ const getCsrfToken = (
     res: Response
 ) => {
     res.json({
-        csrfToken: req.csrfToken(),
+        csrfToken: (req as Request & { csrfToken(): string }).csrfToken(),
     })
 }
 

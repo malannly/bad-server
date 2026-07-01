@@ -70,7 +70,7 @@ const RouteComponent = () => {
         const initCsrf = async () => {
             try {
                 const res = await api.getCsrfToken()
-                setCookie('_csrfToken', res.csrfToken)
+                setCookie('_csrf', res.csrfToken)
             } catch (e) {
                 console.log('CSRF error', e)
             }

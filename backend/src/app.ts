@@ -5,6 +5,7 @@ import 'dotenv/config'
 import express, { json, urlencoded } from 'express'
 import mongoose from 'mongoose'
 import path from 'path'
+import csrf from 'csurf'
 import { DB_ADDRESS } from './config'
 import errorHandler from './middlewares/error-handler'
 import serveStatic from './middlewares/serverStatic'
@@ -15,11 +16,18 @@ const app = express()
 
 app.use(cookieParser())
 
-app.use(serveStatic(path.join(__dirname, 'public')))
-
+app.use(json())
 app.use(urlencoded({ extended: true }))
 
-app.use(json())
+const csrfProtection = csrf({
+    cookie: {
+        httpOnly: true,
+        sameSite: 'lax', //
+        secure: process.env.NODE_ENV === 'production',
+    },
+})
+
+app.use(csrfProtection)
 
 app.use(
     cors({
@@ -28,19 +36,14 @@ app.use(
     })
 )
 
-app.options(
-    '*',
-    cors({
-        origin: process.env.ORIGIN_ALLOW,
-        credentials: true,
-    })
-)
+app.options('*', cors({ origin: process.env.ORIGIN_ALLOW, credentials: true }))
+
+app.use(serveStatic(path.join(__dirname, 'public')))
 
 app.use(routes)
+
 app.use(errors())
 app.use(errorHandler)
-
-// eslint-disable-next-line no-console
 
 const bootstrap = async () => {
     try {

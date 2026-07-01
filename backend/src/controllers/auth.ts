@@ -11,12 +11,9 @@ import UnauthorizedError from '../errors/unauthorized-error'
 import User from '../models/user'
 
 // получение токена
-const getCsrfToken = (
-    req: Request,
-    res: Response
-) => {
+const getCsrfToken = (req: Request, res: Response) => {
     res.json({
-        csrfToken: (req as Request & { csrfToken(): string }).csrfToken(),
+        csrfToken: req.csrfToken(),
     })
 }
 

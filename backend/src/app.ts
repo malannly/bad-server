@@ -16,8 +16,6 @@ const app = express()
 
 app.use(cookieParser())
 
-app.use(csrfProtection)
-
 app.use(serveStatic(path.join(__dirname, 'public')))
 
 app.use(urlencoded({ extended: true }))

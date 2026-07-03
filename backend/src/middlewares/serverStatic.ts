@@ -11,8 +11,8 @@ export default function serveStatic(baseDir: string) {
             return res.status(403).send('Access denied')
         }
         // Проверяем, существует ли файл
-        fs.access(filePath, fs.constants.F_OK, (err) => {
-            if (err) {
+        fs.stat(filePath, (err, stats) => {
+            if (err || !stats.isFile()) {
                 // Файл не существует отдаем дальше мидлварам
                 return next()
             }

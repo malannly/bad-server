@@ -8,12 +8,7 @@ export const ACCESS_TOKEN = {
     secret: process.env.AUTH_ACCESS_TOKEN_SECRET || 'secret-dev',
     expiry: process.env.AUTH_ACCESS_TOKEN_EXPIRY || '10m',
 }
-if (!process.env.AUTH_ACCESS_TOKEN_SECRET) {
-    throw new Error('AUTH_ACCESS_TOKEN_SECRET is required')
-}
-if (!process.env.AUTH_REFRESH_TOKEN_SECRET) {
-    throw new Error('AUTH_REFRESH_TOKEN_SECRET is required')
-}
+
 export const REFRESH_TOKEN = {
     secret: process.env.AUTH_REFRESH_TOKEN_SECRET || 'secret-dev',
     expiry: process.env.AUTH_REFRESH_TOKEN_EXPIRY || '7d',

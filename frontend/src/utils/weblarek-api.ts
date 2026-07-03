@@ -225,8 +225,10 @@ export class WebLarekAPI extends Api implements IWebLarekAPI {
     }
 
     loginUser = (data: UserLoginBodyDto) => {
+        // чтение кука
         const csrfToken = getCookie('_csrf')
 
+        // matches the token from header with the token from cookie
         return this.request<UserResponseToken>('/auth/login', {
             method: 'POST',
             body: JSON.stringify(data),
@@ -238,6 +240,7 @@ export class WebLarekAPI extends Api implements IWebLarekAPI {
         })
     }
 
+    // генерация нового токена в куки, возвращает в формате json
     getCsrfToken = () => {
         return this.request<{ csrfToken: string }>('/auth/csrf-token', {
             method: 'GET',

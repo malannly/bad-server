@@ -66,6 +66,8 @@ const RouteComponent = () => {
 
     const { authCheck, checkUserAuth } = useActionCreators(userActions)
 
+    // generating token, put it into cookie, return token into json
+    // save it into cookie for the next read
     useEffect(() => {
         const initCsrf = async () => {
             try {
@@ -79,6 +81,7 @@ const RouteComponent = () => {
         initCsrf()
     }, [])
 
+    // the request must go with token
     useEffect(() => {
         checkUserAuth()
             .unwrap()

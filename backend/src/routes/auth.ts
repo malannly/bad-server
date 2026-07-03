@@ -14,6 +14,7 @@ import { csrfProtection } from '../middlewares/csrf'
 
 const authRouter = Router()
 
+// генерация токена в куки
 authRouter.get('/csrf-token', csrfProtection, getCsrfToken)
 
 authRouter.get('/user', auth, getCurrentUser)

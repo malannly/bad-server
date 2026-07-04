@@ -1,3 +1,6 @@
+@use 'mixins' as *;
+@use 'variables' as *;
+
 $primary: #060c14;
 $secondary: white;
 $background: #0f2137;

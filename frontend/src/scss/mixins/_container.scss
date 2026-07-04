@@ -1,4 +1,5 @@
-@use '../variables' as *;
+@use 'mixins' as *;
+@use 'variables' as *;
 
 @mixin container($top: $defaultPadding, $bottom: $defaultPadding) {
     margin: 0 auto;

@@ -115,7 +115,7 @@ export const getOrders = async (
             sort[sortField as string] = sortOrder === 'desc' ? -1 : 1
         }
         const safePage = Math.max(1, Number(page) || 1)
-        const safeLimit = Math.min(Number(limit) || 10, 100)
+        const safeLimit = Math.min(Number(limit) || 10, 10)
         aggregatePipeline.push(
             { $sort: sort },
             { $skip: (safePage - 1) * safeLimit },

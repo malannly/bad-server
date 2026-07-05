@@ -318,6 +318,12 @@ export const createOrder = async (
             allowedAttributes: {},
         })
 
+        const safePhone = String(phone).replace(/\D/g, '')
+
+        if (safePhone.length < 10 || safePhone.length > 15) {
+            return next(new BadRequestError('invalid phone'))
+        }
+
         const newOrder = new Order({
             totalAmount: total,
             products: items,

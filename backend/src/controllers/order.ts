@@ -90,7 +90,6 @@ export const getOrders = async (
             { $unwind: '$products' },
         ]
 
-        // SEARCH (fixed)
         if (search !== undefined && typeof search !== 'string') {
             return res.status(400).json({
                 message: 'Invalid search parameter',

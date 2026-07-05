@@ -318,17 +318,11 @@ export const createOrder = async (
 
         const isPhoneString = String(phone)
 
-        if (!/^(\+?\d[\d\s()-]*)$/.test(isPhoneString)) {
+        if (/[a-zA-Z]/.test(isPhoneString)) {
             return next(new BadRequestError('invalid phone'))
         }
 
-        const safePhone = String(phone).replace(/[^\d+]/g, '')
-
-        const digitsPhone = safePhone.replace(/\D/g, '')
-
-        if (digitsPhone.length < 10 || digitsPhone.length > 15) {
-            return next(new BadRequestError('invalid phone'))
-        }
+        const safePhone = isPhoneString.replace(/[^\d+]/g, '')
 
         const newOrder = new Order({
             totalAmount: total,

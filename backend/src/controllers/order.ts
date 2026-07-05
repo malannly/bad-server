@@ -322,8 +322,8 @@ export const createOrder = async (
 
         const phoneReg = /^(\+\d{10,15}|\d{10,15})$/
 
-        if (!phoneReg.test(isPhoneString)) {
-            return next(new BadRequestError('invalid phone'))
+        if (!phoneReg.test(String(phone).trim())) {
+            return res.status(400).json({ message: 'invalid phone' })
         }
 
         const newOrder = new Order({

@@ -316,11 +316,13 @@ export const createOrder = async (
             allowedAttributes: {},
         })
 
-        const rawPhone = String(phone).trim();
+        const normalizedPhone = String(phone)
+        .trim()
+        .replace(/[^\d+]/g, '');
 
-        const safePhone = rawPhone.replace(/[^\d+]/g, '');
+        const digits = normalizedPhone.replace(/\D/g, '');
 
-        if (!/^\+?\d{10,15}$/.test(safePhone)) {
+        if (digits.length !== 11) {
             throw new BadRequestError('invalid phone');
         }
 
@@ -328,7 +330,7 @@ export const createOrder = async (
             totalAmount: total,
             products: items,
             payment,
-            phone: safePhone,
+            phone: normalizedPhone,
             email,
             comment: safeComment,
             customer: userId,

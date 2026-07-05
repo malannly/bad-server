@@ -137,8 +137,9 @@ export const getCustomers = async (
             },
         ])
 
+        const safeLimit = Math.min(Math.max(Number(limit) || 10, 1), 10)
         const totalUsers = await User.countDocuments(filters)
-        const totalPages = Math.ceil(totalUsers / Number(limit))
+        const totalPages = Math.ceil(totalUsers / safeLimit)
 
         res.status(200).json({
             customers: users,

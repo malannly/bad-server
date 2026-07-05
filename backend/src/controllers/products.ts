@@ -16,9 +16,11 @@ const getProducts = async (req: Request, res: Response, next: NextFunction) => {
             skip: (Number(page) - 1) * Number(limit),
             limit: Number(limit),
         }
+
+        const safeLimit = Math.min(Math.max(Number(limit) || 10, 1), 10)
         const products = await Product.find({}, null, options)
         const totalProducts = await Product.countDocuments({})
-        const totalPages = Math.ceil(totalProducts / Number(limit))
+        const totalPages = Math.ceil(totalProducts / safeLimit)
         return res.send({
             items: products,
             pagination: {

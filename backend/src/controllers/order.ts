@@ -92,7 +92,7 @@ export const getOrders = async (
 
         if (search !== undefined && typeof search !== 'string') {
             return res.status(400).json({
-                message: 'Invalid search parameter',
+                message: 'invalid search parameter',
             })
         }
 
@@ -216,7 +216,7 @@ export const getOrdersCurrentUser = async (
         }
 
         const totalOrders = orders.length
-        const totalPages = Math.ceil(totalOrders / Number(limit))
+        const totalPages = Math.ceil(totalOrders / safeLimit)
 
         orders = orders.slice(options.skip, options.skip + options.limit)
 

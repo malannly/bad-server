@@ -90,11 +90,20 @@ export const getOrders = async (
             { $unwind: '$products' },
         ]
 
-        if (search) {
-            const searchRegex = new RegExp(escapeStringRegexp(search as string),'i')
+        // SEARCH (fixed)
+        if (search !== undefined && typeof search !== 'string') {
+            return res.status(400).json({
+                message: 'Invalid search parameter',
+            })
+        }
+
+        if (search && typeof search === 'string') {
+            const searchRegex = new RegExp(escapeStringRegexp(search), 'i')
             const searchNumber = Number(search)
 
-            const searchConditions: any[] = [{ 'products.title': searchRegex }]
+            const searchConditions: any[] = [
+                { 'products.title': searchRegex },
+            ]
 
             if (!Number.isNaN(searchNumber)) {
                 searchConditions.push({ orderNumber: searchNumber })
@@ -105,8 +114,6 @@ export const getOrders = async (
                     $or: searchConditions,
                 },
             })
-
-            filters.$or = searchConditions
         }
 
         const sort: { [key: string]: any } = {}
@@ -114,8 +121,10 @@ export const getOrders = async (
         if (sortField && sortOrder) {
             sort[sortField as string] = sortOrder === 'desc' ? -1 : 1
         }
+
         const safePage = Math.max(1, Number(page) || 1)
         const safeLimit = Math.min(Math.max(Number(limit) || 10, 1), 10)
+
         aggregatePipeline.push(
             { $sort: sort },
             { $skip: (safePage - 1) * safeLimit },
@@ -137,7 +146,7 @@ export const getOrders = async (
         const totalOrders = await Order.countDocuments(filters)
         const totalPages = Math.ceil(totalOrders / safeLimit)
 
-        res.status(200).json({
+        return res.status(200).json({
             orders,
             pagination: {
                 totalOrders,

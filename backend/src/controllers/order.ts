@@ -318,7 +318,7 @@ export const createOrder = async (
             allowedAttributes: {},
         })
 
-        const isPhoneString = String(phone)
+        const isPhoneString = String(phone).trim()
 
         const phoneReg = /^(\+\d{10,15}|\d{10,15})$/
 

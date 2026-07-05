@@ -6,7 +6,7 @@ import NotFoundError from '../errors/not-found-error'
 import Order, { IOrder } from '../models/order'
 import Product, { IProduct } from '../models/product'
 import User from '../models/user'
-
+import sanitizeHtml from 'sanitize-html'
 
 // eslint-disable-next-line max-len
 // GET /orders?page=2&limit=5&sort=totalAmount&order=desc&orderDateFrom=2024-07-01&orderDateTo=2024-08-01&status=delivering&totalAmountFrom=100&totalAmountTo=1000&search=%2B1
@@ -311,26 +311,24 @@ export const createOrder = async (
             return next(new BadRequestError('Неверная сумма заказа'))
         }
 
-        const sanitizeHtml = require('sanitize-html')
-
         const safeComment = sanitizeHtml(comment || '', {
             allowedTags: [],
             allowedAttributes: {},
         })
 
-        const isPhoneString = String(phone).trim()
+        // const isPhoneString = String(phone).trim()
 
-        const phoneReg = /^(\+\d{10,15}|\d{10,15})$/
+        // const phoneReg = /^(\+\d{10,15}|\d{10,15})$/
 
-        if (!phoneReg.test(String(phone).trim())) {
-            return res.status(400).json({ message: 'invalid phone' })
-        }
+        // if (!phoneReg.test(String(phone).trim())) {
+        //     return res.status(400).json({ message: 'invalid phone' })
+        // }
 
         const newOrder = new Order({
             totalAmount: total,
             products: items,
             payment,
-            phone: isPhoneString,
+            phone,
             email,
             comment: safeComment,
             customer: userId,

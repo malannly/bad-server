@@ -90,19 +90,11 @@ export const getOrders = async (
             { $unwind: '$products' },
         ]
 
-        if (search !== undefined && typeof search !== 'string') {
-            return res.status(400).json({
-                message: 'invalid search parameter',
-            })
-        }
-
-        if (search && typeof search === 'string') {
-            const searchRegex = new RegExp(escapeStringRegexp(search), 'i')
+        if (search) {
+            const searchRegex = new RegExp(escapeStringRegexp(search as string),'i')
             const searchNumber = Number(search)
 
-            const searchConditions: any[] = [
-                { 'products.title': searchRegex },
-            ]
+            const searchConditions: any[] = [{ 'products.title': searchRegex }]
 
             if (!Number.isNaN(searchNumber)) {
                 searchConditions.push({ orderNumber: searchNumber })
@@ -113,6 +105,7 @@ export const getOrders = async (
                     $or: searchConditions,
                 },
             })
+
         }
 
         const sort: { [key: string]: any } = {}
@@ -120,10 +113,8 @@ export const getOrders = async (
         if (sortField && sortOrder) {
             sort[sortField as string] = sortOrder === 'desc' ? -1 : 1
         }
-
         const safePage = Math.max(1, Number(page) || 1)
         const safeLimit = Math.min(Math.max(Number(limit) || 10, 1), 10)
-
         aggregatePipeline.push(
             { $sort: sort },
             { $skip: (safePage - 1) * safeLimit },
@@ -145,7 +136,7 @@ export const getOrders = async (
         const totalOrders = await Order.countDocuments(filters)
         const totalPages = Math.ceil(totalOrders / safeLimit)
 
-        return res.status(200).json({
+        res.status(200).json({
             orders,
             pagination: {
                 totalOrders,
@@ -216,7 +207,7 @@ export const getOrdersCurrentUser = async (
         }
 
         const totalOrders = orders.length
-        const totalPages = Math.ceil(totalOrders / safeLimit)
+        const totalPages = Math.ceil(totalOrders / Number(limit))
 
         orders = orders.slice(options.skip, options.skip + options.limit)
 
@@ -320,11 +311,13 @@ export const createOrder = async (
             return next(new BadRequestError('Неверная сумма заказа'))
         }
 
+        const safePhone = String(phone).replace(/\D/g, '')
+
         const newOrder = new Order({
             totalAmount: total,
             products: items,
             payment,
-            phone,
+            phone: safePhone,
             email,
             comment,
             customer: userId,

@@ -9,6 +9,7 @@ import { DB_ADDRESS } from './config'
 import errorHandler from './middlewares/error-handler'
 import serveStatic from './middlewares/serverStatic'
 import routes from './routes'
+import rateLimit from 'express-rate-limit'
 
 const { PORT = 3000 } = process.env
 const app = express()
@@ -17,9 +18,14 @@ app.use(cookieParser())
 
 app.use(serveStatic(path.join(__dirname, 'public')))
 
-app.use(json())
+export const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 100,
+})
 
-app.use(urlencoded({ extended: true }))
+app.use(json({ limit: '1mb' }))
+
+app.use(urlencoded({ extended: true, limit: '1mb' }))
 
 app.use(
     cors({
@@ -31,10 +37,12 @@ app.use(
 app.options(
     '*',
     cors({
-        origin: process.env.ORIGIN_ALLOW,
+        origin: process.env.ORIGIN_ALLOW || '*',
         credentials: true,
     })
 )
+
+app.use(limiter)
 
 app.use(routes)
 app.use(errors())

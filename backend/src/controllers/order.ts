@@ -115,7 +115,7 @@ export const getOrders = async (
             sort[sortField as string] = sortOrder === 'desc' ? -1 : 1
         }
         const safePage = Math.max(1, Number(page) || 1)
-        const safeLimit = Math.min(Number(limit) || 10, 10)
+        const safeLimit = Math.min(Math.max(Number(limit) || 10, 1), 10)
         aggregatePipeline.push(
             { $sort: sort },
             { $skip: (safePage - 1) * safeLimit },
@@ -135,7 +135,7 @@ export const getOrders = async (
 
         const orders = await Order.aggregate(aggregatePipeline)
         const totalOrders = await Order.countDocuments(filters)
-        const totalPages = Math.ceil(totalOrders / Number(limit))
+        const totalPages = Math.ceil(totalOrders / safeLimit)
 
         res.status(200).json({
             orders,
@@ -143,7 +143,7 @@ export const getOrders = async (
                 totalOrders,
                 totalPages,
                 currentPage: safePage,
-                pageSize: Number(limit),
+                pageSize: safeLimit,
             },
         })
     } catch (error) {
@@ -159,7 +159,7 @@ export const getOrdersCurrentUser = async (
     try {
         const userId = res.locals.user._id
         const { search, page = 1, limit = 5 } = req.query
-        const safeLimit = Math.min(Number(limit), 100)
+        const safeLimit = Math.min(Math.max(Number(limit) || 10, 1), 10)
         const options = {
             skip: (Number(page) - 1) * safeLimit,
             limit: safeLimit,

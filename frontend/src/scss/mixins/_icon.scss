@@ -1,6 +1,4 @@
 @use '../../vendor/glyphter';
-@use 'mixins' as *;
-@use 'variables' as *;
 
 @mixin icon($size, $name) {
     display: inline-block;

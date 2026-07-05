@@ -1,6 +1,3 @@
-@use 'mixins' as *;
-@use 'variables' as *;
-
 @mixin background($image, $size: 'cover') {
     background: url($image) no-repeat center;
     background-size: $size;

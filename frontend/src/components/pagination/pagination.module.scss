@@ -1,3 +1,6 @@
+@use '../../scss/mixins' as mixins;
+@use '../../scss/variables' as *;
+
 .container {
     @include mixins.flex(row);
     align-items: center;

@@ -1,6 +1,3 @@
-@use 'mixins' as *;
-@use 'variables' as *;
-
 @mixin clearfix {
     content: '';
     display: table;

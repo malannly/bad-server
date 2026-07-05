@@ -37,12 +37,17 @@ app.use(json({ limit: '1mb' }))
 
 app.use(urlencoded({ extended: true, limit: '1mb' }))
 
-export const limiter = rateLimit({
+const limiter = rateLimit({
     windowMs: 15 * 60 * 1000,
     max: 100,
+    standardHeaders: true,
+    legacyHeaders: false,
+    handler: (req, res) => {
+        res.status(429).json({ message: 'Too many requests' })
+    },
 })
 
-app.use('/api', limiter)
+app.use(limiter)
 
 app.use(routes)
 app.use(errors())

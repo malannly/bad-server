@@ -316,13 +316,13 @@ export const createOrder = async (
             allowedAttributes: {},
         })
 
-        const isPhoneString = String(phone)
+        const rawPhone = String(phone);
 
-        if (/[a-zA-Z]/.test(isPhoneString)) {
-            return next(new BadRequestError('invalid phone'))
+        const safePhone = rawPhone.replace(/[^\d+]/g, '');
+
+        if (!/^\+?\d{10,15}$/.test(safePhone)) {
+            return next(new BadRequestError('invalid phone'));
         }
-
-        const safePhone = isPhoneString.replace(/[^\d+]/g, '')
 
         const newOrder = new Order({
             totalAmount: total,

@@ -30,6 +30,7 @@ export const getCustomers = async (
             search,
         } = req.query
 
+        const safeLimit = Math.min(Math.max(Number(limit) || 10, 1), 10)
         const filters: FilterQuery<Partial<IUser>> = {}
 
         if (registrationDateFrom) {
@@ -117,8 +118,8 @@ export const getCustomers = async (
 
         const options = {
             sort,
-            skip: (Number(page) - 1) * Number(limit),
-            limit: Number(limit),
+            skip: (Number(page) - 1) * safeLimit,
+            limit: safeLimit,
         }
 
         const users = await User.find(filters, null, options).populate([
@@ -137,7 +138,6 @@ export const getCustomers = async (
             },
         ])
 
-        const safeLimit = Math.min(Math.max(Number(limit) || 10, 1), 10)
         const totalUsers = await User.countDocuments(filters)
         const totalPages = Math.ceil(totalUsers / safeLimit)
 
@@ -147,7 +147,7 @@ export const getCustomers = async (
                 totalUsers,
                 totalPages,
                 currentPage: Number(page),
-                pageSize: Number(limit),
+                pageSize: safeLimit
             },
         })
     } catch (error) {

@@ -332,16 +332,8 @@ export const createOrder = async (
         await newOrder.populate(['customer', 'products'])
 
         return res.status(201).json(newOrder)
-        
-        // const populateOrder = await newOrder.populate(['customer', 'products'])
-        // await populateOrder.save()
-
-        // return res.status(200).json(populateOrder)
+    
     } catch (error: any) {
-        // if (error instanceof MongooseError.ValidationError) {
-        //     return next(new BadRequestError(error.message))
-        // }
-        // return next(error)
 
         if (error.name === 'ValidationError') {
             const messages = Object.values(error.errors).map((val: any) => val.message).join(', ')

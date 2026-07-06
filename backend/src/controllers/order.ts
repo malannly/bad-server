@@ -316,38 +316,41 @@ export const createOrder = async (
             allowedAttributes: {},
         })
 
-        const normalizedPhone = String(phone)
-        .trim()
-        .replace(/[^\d+]/g, '');
-
-        const digits = normalizedPhone.replace(/\D/g, '');
-
-        if (digits.length !== 11) {
-            throw new BadRequestError('invalid phone');
-        }
-
         const newOrder = new Order({
             totalAmount: total,
             products: items,
             payment,
-            phone: normalizedPhone,
+            phone,
             email,
             comment: safeComment,
             customer: userId,
             deliveryAddress: address,
         })
-        
-        const populateOrder = await newOrder.populate(['customer', 'products'])
-        await populateOrder.save()
 
-        return res.status(200).json(populateOrder)
-    } catch (error) {
-        if (error instanceof MongooseError.ValidationError) {
-            return next(new BadRequestError(error.message))
+        await newOrder.save()
+
+        await newOrder.populate(['customer', 'products'])
+
+        return res.status(201).json(newOrder)
+        
+        // const populateOrder = await newOrder.populate(['customer', 'products'])
+        // await populateOrder.save()
+
+        // return res.status(200).json(populateOrder)
+    } catch (error: any) {
+        // if (error instanceof MongooseError.ValidationError) {
+        //     return next(new BadRequestError(error.message))
+        // }
+        // return next(error)
+
+        if (error.name === 'ValidationError') {
+            const messages = Object.values(error.errors).map((val: any) => val.message).join(', ')
+            return next(new BadRequestError(messages))
         }
         return next(error)
     }
-}
+    }
+
 
 // Update an order
 export const updateOrder = async (

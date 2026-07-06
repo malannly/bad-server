@@ -26,6 +26,7 @@
     "@types/node": "^20.19.43",
     "@types/sanitize-html": "^2.16.1",
     "@types/unique-slug": "^4.0.0",
+    "@types/uuid": "^10.0.0",
     "@types/validator": "^13.11.9",
     "@typescript-eslint/eslint-plugin": "^7.7.1",
     "@typescript-eslint/parser": "^7.7.1",
@@ -59,6 +60,7 @@
     "sanitize-html": "^2.17.5",
     "sharp": "^0.33.4",
     "unique-slug": "^4.0.0",
+    "uuid": "^14.0.1",
     "validator": "^13.12.0"
   },
   "overrides": {

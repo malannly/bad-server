@@ -15,17 +15,14 @@ export default defineConfig({
   },
   build: {
     assetsInlineLimit:0,
+    target: 'esnext',
   },
   css: {
     preprocessorOptions: {
       scss: {
-        additionalData: `
-          @use "./src/scss/variables" as *;
-          @use "./src/scss/mixins";
-        `,
+        loadPaths: [resolve('./src/scss')],
       },
-
-    }
+    },
   },
 
 })

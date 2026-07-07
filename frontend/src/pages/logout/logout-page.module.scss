@@ -1,3 +1,6 @@
+@use '../../scss/variables' as *;
+@use '../../scss/mixins' as mixins;
+
 .logout {
     max-width: $maxPageWidth;
     margin: 0 auto;

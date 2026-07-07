@@ -45,12 +45,10 @@ class Api {
 
     protected handleResponse<T>(response: Response): Promise<T> {
         return response.ok
-            ? response.json()
-            : response
-                  .json()
-                  .then((err) =>
-                      Promise.reject({ ...err, statusCode: response.status })
-                  )
+            ? (response.json() as Promise<T>)
+            : response.json().then((err) =>
+                Promise.reject({ ...err, statusCode: response.status })
+            )
     }
 
     protected async request<T>(endpoint: string, options: RequestInit) {
@@ -227,12 +225,25 @@ export class WebLarekAPI extends Api implements IWebLarekAPI {
     }
 
     loginUser = (data: UserLoginBodyDto) => {
+        // чтение кука
+        const csrfToken = getCookie('_csrf')
+
+        // matches the token from header with the token from cookie
         return this.request<UserResponseToken>('/auth/login', {
             method: 'POST',
             body: JSON.stringify(data),
             headers: {
                 'Content-Type': 'application/json',
+                ...(csrfToken ? { 'x-csrf-token': csrfToken } : {}),
             },
+            credentials: 'include',
+        })
+    }
+
+    // генерация нового токена в куки, возвращает в формате json
+    getCsrfToken = () => {
+        return this.request<{ csrfToken: string }>('/auth/csrf-token', {
+            method: 'GET',
             credentials: 'include',
         })
     }

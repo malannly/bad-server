@@ -10,6 +10,15 @@ import NotFoundError from '../errors/not-found-error'
 import UnauthorizedError from '../errors/unauthorized-error'
 import User from '../models/user'
 
+// получение токена
+const getCsrfToken = (req: Request, res: Response) => {
+    console.log('csrfToken method', typeof (req as any).csrfToken)
+
+    res.json({
+        csrfToken: req.csrfToken(),
+    })
+}
+
 // POST /auth/login
 const login = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -192,8 +201,9 @@ const updateCurrentUser = async (
 ) => {
     const userId = res.locals.user._id
     try {
-        const updatedUser = await User.findByIdAndUpdate(userId, req.body, {
-            new: true,
+        const { name, email } = req.body
+        const updatedUser = await User.findByIdAndUpdate(userId, { name, email } , {
+            new: true, runValidators: true,
         }).orFail(
             () =>
                 new NotFoundError(
@@ -207,6 +217,7 @@ const updateCurrentUser = async (
 }
 
 export {
+    getCsrfToken,
     getCurrentUser,
     getCurrentUserRoles,
     login,

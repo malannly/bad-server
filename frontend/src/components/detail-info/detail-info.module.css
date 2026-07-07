@@ -1,0 +1,47 @@
+.detailInfo {
+  padding: 20px;
+}
+.detailInfo__container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(40%, 1fr));
+  gap: 20px;
+}
+.detailInfo__title {
+  font-size: 3em;
+}
+.detailInfo__subtitle {
+  font-size: 1.5em;
+}
+.detailInfo__item {
+  color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  font-size: 1.5em;
+}
+.detailInfo__itemTitle {
+  font-size: 20px;
+  color: #5f8cc7;
+}
+.detailInfo__itemArray {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  gap: 20px;
+  flex-direction: column;
+}
+.detailInfo__itemWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.detailInfo__actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  font-size: 1.5em;
+  gap: 80px;
+  grid-column: 1/-1;
+}
+
+/*# sourceMappingURL=detail-info.module.css.map */

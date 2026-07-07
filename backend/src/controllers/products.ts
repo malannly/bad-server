@@ -16,9 +16,11 @@ const getProducts = async (req: Request, res: Response, next: NextFunction) => {
             skip: (Number(page) - 1) * Number(limit),
             limit: Number(limit),
         }
+
+        const safeLimit = Math.min(Math.max(Number(limit) || 10, 1), 10)
         const products = await Product.find({}, null, options)
         const totalProducts = await Product.countDocuments({})
-        const totalPages = Math.ceil(totalProducts / Number(limit))
+        const totalPages = Math.ceil(totalProducts / safeLimit)
         return res.send({
             items: products,
             pagination: {
@@ -81,7 +83,7 @@ const updateProduct = async (
 ) => {
     try {
         const { productId } = req.params
-        const { image } = req.body
+        const { title, description, category, price, image } = req.body
 
         // Переносим картинку из временной папки
         if (image) {
@@ -96,10 +98,12 @@ const updateProduct = async (
             productId,
             {
                 $set: {
-                    ...req.body,
-                    price: req.body.price ? req.body.price : null,
-                    image: req.body.image ? req.body.image : undefined,
-                },
+                    title,
+                    description,
+                    category,
+                    price,
+                    image,
+                }
             },
             { runValidators: true, new: true }
         ).orFail(() => new NotFoundError('Нет товара по заданному id'))

@@ -45,6 +45,8 @@ import 'react-toastify/dist/ReactToastify.css'
 import { PersistGate } from 'redux-persist/integration/react'
 import AdminCustomerDetail from '../admin/admin-customer-detail'
 import ProfileOrderDetail from '../profile/profile-order-detail'
+import { setCookie } from '../../utils/cookie'
+import api from '@api'
 
 const App = () => (
     <BrowserRouter>
@@ -61,17 +63,36 @@ export default App
 const RouteComponent = () => {
     const location = useLocation()
     const navigate = useNavigate()
-    const { authCheck, checkUserAuth } = useActionCreators(userActions)
-    const handleModalClose = (path: To | number) => () => navigate(path as To)
 
+    const { authCheck, checkUserAuth } = useActionCreators(userActions)
+
+    // generating token, put it into cookie, return token into json
+    // save it into cookie for the next read
+    useEffect(() => {
+        const initCsrf = async () => {
+            try {
+                const res = await api.getCsrfToken()
+                setCookie('_csrf', res.csrfToken)
+            } catch (e) {
+                console.log('CSRF error', e)
+            }
+        }
+
+        initCsrf()
+    }, [])
+
+    // the request must go with token
     useEffect(() => {
         checkUserAuth()
             .unwrap()
             .finally(() => authCheck())
     }, [checkUserAuth, authCheck])
 
+    const handleModalClose = (path: To | number) => () =>
+        navigate(path as To)
+
     const locationState = location.state as { background?: Location }
-    const background = locationState && locationState.background
+    const background = locationState?.background
 
     return (
         <>
